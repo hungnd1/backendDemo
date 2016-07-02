@@ -1,7 +1,9 @@
 <?php
 namespace backend\controllers;
 
+use common\models\User;
 use Yii;
+use yii\base\Exception;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -79,5 +81,18 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+    public function actionInsert(){
+        $user = new User();
+        $user->username = 'admin';
+        $user->email = 'hungnd1292@gmail.com';
+        $user->password  = '123456';
+        $user->generateAuthKey();
+        if($user->save()){
+            return $user;
+        }else{
+            Yii::error($user->getErrors());
+            throw new Exception("Can not created user!");
+        }
     }
 }
